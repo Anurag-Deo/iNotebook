@@ -23,7 +23,7 @@ const NoteState = (props) => {
         const json = await response.json()
         console.log(json);
         setNotes(json)
-        
+
     }
 
     //Add a Note
@@ -39,7 +39,7 @@ const NoteState = (props) => {
             //The body should be an object consisting the title, desc and the tag
             body: JSON.stringify({ title, description, tag })
         });
-        
+
         //This is the client side logic to add note
         const note = {
             "_id": "624678a728cd409adfd587dde",
@@ -55,9 +55,9 @@ const NoteState = (props) => {
 
     //Edit a Note
     const editNote = async (id, title, description, tag) => {
-//Api call to edit the notes using the editNote api created in the Backend
+        //Api call to edit the notes using the editNote api created in the Backend
         const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI0NDQyNmU4NWEyMWI2ZjU5NjI2OWIyIn0sImlhdCI6MTY0ODY5NjQ1NX0.QRdWMg3rIsnUzxJvwDqs-NdToxm-AoKh_Bb-qiuOPCs'
@@ -67,20 +67,23 @@ const NoteState = (props) => {
         });
         const json = response.json();
 
+        // Created a newNote 
+        let newNote = JSON.parse(JSON.stringify(notes))
         //The logic for the client
-        for (let index = 0; index < notes.length; index++) {
+        for (let index = 0; index < newNote.length; index++) {
             const element = notes[index];
-            if (notes._id === id) {
-                element.title = title;
-                element.description = description;
-                element.tag = tag;
+            if (element._id === id) {
+                newNote[index].title = title;
+                newNote[index].description = description;
+                newNote[index].tag = tag;
+                break;
             }
-
         }
+        setNotes(newNote);
     }
 
     //Delete a Note
-    const deleteNote = async(id) => {
+    const deleteNote = async (id) => {
         //TODO: Api Call
         const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
             method: 'DELETE',
