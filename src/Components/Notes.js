@@ -35,6 +35,7 @@ export const Notes = () => {
         editNote(note.id, note.etitle, note.edescription, note.etag)
         refClose.current.click()
         e.preventDefault()
+       
 
     }
 
@@ -66,11 +67,11 @@ export const Notes = () => {
                             <form className="my-3">
                                 <div className="mb-3">
                                     <label htmlFor="title" className="form-label">Title</label>
-                                    <input type="text" className="form-control" id="etitle" name='etitle' aria-describedby="etitleHelp" value={note.etitle} onChange={onChange} />
+                                    <input type="text" className="form-control" id="etitle" name='etitle' aria-describedby="etitleHelp" value={note.etitle} onChange={onChange} minLength={5} required/>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Description</label>
-                                    <input type="text" className="form-control" id="edescription" name='edescription' value={note.edescription} onChange={onChange} />
+                                    <input type="text" className="form-control" id="edescription" name='edescription' value={note.edescription} onChange={onChange} minLength={5} required/>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="tag" className="form-label">Tag</label>
@@ -81,13 +82,14 @@ export const Notes = () => {
                         </div>
                         <div className="modal-footer">
                             <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary" onClick={handleClick}>Update Note</button>
+                            <button type="button" className="btn btn-primary" onClick={handleClick} disabled={note.etitle.length<5 || note.edescription.length<5}>Update Note</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="row my-3">
                 <h2>Your Notes</h2>
+                {notes.length===0 ? <p className='mx-2'>Please add some note to view it here</p>:""}
                 {/* For all the items of the notes return the Noteitem with key and note as a prop */}
                 {notes.map((note) => {
                     return <Noteitem key={note._id} updateNote={updateNote} note={note} />

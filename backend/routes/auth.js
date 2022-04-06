@@ -13,6 +13,7 @@ router.post('/createuser', [
     body('name', 'Enter a valid name of atleast 3 chars long').isLength({ min: 3 }),
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'The password must be atleast 5 character long').isLength({ min: 5 })], async (req, res) => {
+        let success = false;
         //If there are errors return bad requests. Following lines are same as mentioned on the express validator website
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -26,7 +27,7 @@ router.post('/createuser', [
 
             //If user already exists then send the status code 400 with the message that the user already exists.
             if (user) {
-                return res.status(400).json({ error: "Sorry a user with this email already exists" })
+                return res.status(400).json({ success ,error: "Sorry a user with this email already exists" })
             }
 
             //Generating the salt and hashing the password to save in the database
@@ -48,7 +49,8 @@ router.post('/createuser', [
                 }
             }
             const authtoken = jwt.sign(data, JWT_SECRET)
-            res.json({ authtoken })
+            success = true
+            res.json({ success,authtoken })
 
         } catch (error) {
             console.error(error.message);
@@ -62,6 +64,7 @@ router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password cannot be blank').exists()], async (req, res) => {
 
+        let success = false
         //If there are errors return bad requests. Following lines are same as mentioned on the express validator website
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -75,7 +78,8 @@ router.post('/login', [
 
             //If user doesn't exists then send the 400 status code with a message of please try again with the correct credentials
             if (!user) {
-                return res.status(400).json({ error: "Please try to login with correct credentials" });
+                
+                return res.status(400).json({ success, error: "Please try to login with correct credentials" });
             }
 
             //Compare the password entered by the user and the hash stored in the database
@@ -83,7 +87,8 @@ router.post('/login', [
 
             //If the password is wrong sending the status code 400 with a message of please try to login with correct credentials
             if (!passwordCompare) {
-                return res.status(400).json({ error: "Please try to login with correct credentials" });
+                
+                return res.status(400).json({ success, error: "Please try to login with correct credentials" });
             }
             const data = {
                 user: {
@@ -92,7 +97,8 @@ router.post('/login', [
             }
             //Signing and issuing a token to the user for login
             const authtoken = jwt.sign(data, JWT_SECRET)
-            res.json({ authtoken })
+            success = true;
+            res.json({ success, authtoken })
         } catch (error) {
             console.error(error.message);
             res.status(500).send("Internal Server Error")

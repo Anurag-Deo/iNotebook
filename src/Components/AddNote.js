@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import noteContext from '../Context/notes/noteContext';
+import Alert from './Alert';
 
 const AddNote = () => {
     //Using context call to use the note Context
@@ -15,6 +16,10 @@ const AddNote = () => {
     const handleClick = (e) => {
         e.preventDefault()
         addNote(note.title, note.description, note.tag);
+        document.getElementById('title').value="";
+        document.getElementById('description').value="";
+        document.getElementById('tag').value="";
+        
     }
 
     //The function to make the textbox editable
@@ -30,17 +35,17 @@ const AddNote = () => {
                 <form className="my-3">
                     <div className="mb-3">
                         <label htmlFor="title" className="form-label">Title</label>
-                        <input type="text" className="form-control" id="title" name='title' aria-describedby="titleHelp" onChange={onChange} />
+                        <input type="text" className="form-control" id="title" name='title' aria-describedby="titleHelp" onChange={onChange} minLength={5} required/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="description" className="form-label">Description</label>
-                        <input type="text" className="form-control" id="description" name='description' onChange={onChange} />
+                        <input type="text" className="form-control" id="description" name='description' onChange={onChange} minLength={5} required/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="tag" className="form-label">Tag</label>
                         <input type="text" className="form-control" id="tag" name='tag' onChange={onChange} />
                     </div>
-                    <button type="submit" className="btn btn-primary" onClick={handleClick}>Add Note</button>
+                    <button disabled={note.title.length<5 || note.description.length<5} type="submit" className="btn btn-primary" onClick={handleClick}>Add Note</button>
                 </form>
             </div>
         </div>
