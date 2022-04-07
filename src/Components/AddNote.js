@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import noteContext from '../Context/notes/noteContext';
 import Alert from './Alert';
 
-const AddNote = () => {
+const AddNote = (props) => {
     //Using context call to use the note Context
     const context = useContext(noteContext);
 
@@ -19,7 +19,7 @@ const AddNote = () => {
         document.getElementById('title').value="";
         document.getElementById('description').value="";
         document.getElementById('tag').value="";
-        
+        props.showAlert("Note added successfully","success");
     }
 
     //The function to make the textbox editable

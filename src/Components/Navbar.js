@@ -1,7 +1,15 @@
 import React from 'react'
 import {Link,useLocation} from "react-router-dom";
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Navbar = () => {
+
+    let history = useHistory();
+    
+    const handleLogout = ()=>{
+        localStorage.removeItem('token');
+        history.push('/login')
+    }
     //We have used the use location hook of the react router dom so that we can change the active class of the navbar.
     let location = useLocation();
     return (
@@ -20,10 +28,10 @@ const Navbar = () => {
                             <Link className={`nav-link ${location.pathname=='/about'?"active":""}`} to="/about">About</Link>
                         </li>
                     </ul>
-                    <form className="d-flex">
+                    {!localStorage.getItem('token') ? <form className="d-flex">
                         <Link className="btn btn-primary mx-1" to="/login" role="button">Login</Link>
                         <Link className="btn btn-primary mx-1" to="/signup" role="button">SignUp</Link>
-                    </form>
+                    </form> : <button className='btn btn-primary mx-1' onClick={handleLogout}>Logout</button>}
                 </div>
             </div>
         </nav>

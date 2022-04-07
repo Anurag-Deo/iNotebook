@@ -1,13 +1,14 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-const Signup = () => {
+const Signup = (props) => {
 
     const [credentials, setcredentials] = useState({ name: "", email: "", password: "", cpassword: "" })
     let history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(credentials.password==credentials.cpassword){
         const response = await fetch('http://localhost:5000/api/auth/createuser', {
             method: 'POST',
             headers: {
@@ -26,8 +27,17 @@ const Signup = () => {
             //Saving the auth-token and redirect
             localStorage.setItem('token', json.authtoken)
             history.push("/");
+            props.showAlert("Account created Successfully","success");
+        }
+        else{
+            props.showAlert("Invalid Details","danger");
         }
     }
+    else{
+        // document.getElementById('checkPass').innerText="Password didn't match with the confirm password"
+        props.showAlert("Password didn't match with the confirm password","danger");
+    }
+}
 
     const onChange = (e) => {
         //This is a special syntax used to say that add the listed property after the note
@@ -53,7 +63,7 @@ const Signup = () => {
                                                 <div className="d-flex flex-row align-items-center mb-4">
                                                     <i className="fas fa-user fa-lg me-3 fa-fw"></i>
                                                     <div className="form-outline flex-fill mb-0">
-                                                        <input type="text" id="name" className="form-control" onChange={onChange} value={credentials.name} name="name"/>
+                                                        <input type="text" id="name" className="form-control" onChange={onChange} value={credentials.name} name="name" required minLength={5}/>
                                                         <label className="form-label" htmlFor="form3Example1c">Your Name</label>
                                                     </div>
                                                 </div>
@@ -61,7 +71,7 @@ const Signup = () => {
                                                 <div className="d-flex flex-row align-items-center mb-4">
                                                     <i className="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                                     <div className="form-outline flex-fill mb-0">
-                                                        <input type="email" id="email" className="form-control" onChange={onChange} value={credentials.email} name="email"/>
+                                                        <input type="email" id="email" className="form-control" onChange={onChange} value={credentials.email} name="email" required minLength={5}/>
                                                         <label className="form-label" htmlFor="form3Example3c">Your Email</label>
                                                     </div>
                                                 </div>
@@ -69,7 +79,7 @@ const Signup = () => {
                                                 <div className="d-flex flex-row align-items-center mb-4">
                                                     <i className="fas fa-lock fa-lg me-3 fa-fw"></i>
                                                     <div className="form-outline flex-fill mb-0">
-                                                        <input type="password" id="password" className="form-control" onChange={onChange} value={credentials.password} name="password"/>
+                                                        <input type="password" id="password" className="form-control" onChange={onChange} value={credentials.password} name="password" required minLength={5}/>
                                                         <label className="form-label" htmlFor="form3Example4c">Password</label>
                                                     </div>
                                                 </div>
@@ -77,8 +87,9 @@ const Signup = () => {
                                                 <div className="d-flex flex-row align-items-center mb-4">
                                                     <i className="fas fa-key fa-lg me-3 fa-fw"></i>
                                                     <div className="form-outline flex-fill mb-0">
-                                                        <input type="password" id="cpassword" className="form-control" onChange={onChange} name="cpassword"/>
-                                                        <label className="form-label" htmlFor="form3Example4cd">Repeat your password</label>
+                                                        <input type="password" id="cpassword" className="form-control" onChange={onChange} value={credentials.cpassword} name="cpassword" required minLength={5}/>
+                                                        <label className="form-label" htmlFor="form3Example4cd" >Repeat your password</label><br/>
+                                                        <label className="form-label" htmlFor="form3Example4cd" id='checkPass'></label>
                                                     </div>
                                                 </div>
 

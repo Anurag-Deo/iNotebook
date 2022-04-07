@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import noteContext from '../Context/notes/noteContext';
 import AddNote from './AddNote';
 import Noteitem from './Noteitem';
 
-export const Notes = () => {
+export const Notes = (props) => {
+    let history = useHistory();
     //Setting the useState for the title desc and tag
     const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" })
 
@@ -25,7 +27,13 @@ export const Notes = () => {
 
     //Calling the getNotes function to call all the notes through the fetch api
     useEffect(() => {
+        //If the user has logged in then his token is stored in the local storage so checking if it is present before giving him his notes
+        if(localStorage.getItem('token')){
         getNotes()
+        }
+        else{
+            history.push('/login');
+        }
     }, [])
 
 
@@ -35,7 +43,7 @@ export const Notes = () => {
         editNote(note.id, note.etitle, note.edescription, note.etag)
         refClose.current.click()
         e.preventDefault()
-       
+        props.showAlert("Note edited successfully","success");
 
     }
 
@@ -48,7 +56,7 @@ export const Notes = () => {
 
     return (
         <>
-            <AddNote />
+            <AddNote showAlert={props.showAlert}/>
 
             {/*Adding a button and a modal for editing the note. Using the bootstrap js and useref hook to trigger the modal*/}
             <button type="button" className="btn btn-primary" data-bs-toggle="modal" ref={ref} data-bs-target="#exampleModal" style={{ display: 'none' }}>
@@ -92,7 +100,7 @@ export const Notes = () => {
                 {notes.length===0 ? <p className='mx-2'>Please add some note to view it here</p>:""}
                 {/* For all the items of the notes return the Noteitem with key and note as a prop */}
                 {notes.map((note) => {
-                    return <Noteitem key={note._id} updateNote={updateNote} note={note} />
+                    return <Noteitem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />
                 })}
             </div>
         </>

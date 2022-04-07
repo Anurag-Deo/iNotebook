@@ -14,8 +14,8 @@ const Noteitem = (props) => {
                         <h5 className="card-title">{note.title}</h5>
                         {/* Using the icons from the font Awsome icon library */}
                         {/* Deleting the note by calling the delete note fx with note._id as props as in MongoDb id is stored as _id */}
-                        <i className="fa-solid fa-trash-can mx-2" onClick={() => { deleteNote(note._id) }}></i>
-                        <i className="fa-solid fa-pen-to-square mx-2" onClick={() => { updateNote(note) }}></i>
+                        <i className="fa-solid fa-trash-can mx-2" onClick={() => { deleteNote(note._id); props.showAlert("Note deleted successfully","success"); }}></i>
+                        <i className="fa-solid fa-pen-to-square mx-2" onClick={() => { updateNote(note); }}></i>
 
                     </div>
                     <p className="card-text">{note.description}</p>
